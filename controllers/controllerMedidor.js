@@ -48,8 +48,11 @@ const createSimulacion = async(req, res) =>{
     } catch (error) {
         console.log('Error en la funcion createSimulacion ')
     }
-    
-    simu()
+    if(encendido == 1){
+        simu()
+    }else{
+        console.log("apagado")
+    }
 }
 
 async function simu (){
