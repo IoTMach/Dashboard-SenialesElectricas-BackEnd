@@ -16,6 +16,7 @@ app.use(require('./routes/routesLogin'));
 app.use(require('./routes/routesMedidor'));
 app.use(require('./routes/routesOcupacion'));
 app.use(require('./routes/routesFecha'));
+app.use(require('./routes/routesSimulacion'));
 
 var port=process.env.PORT || 4000;
 app.listen(port);
