@@ -56,7 +56,6 @@ const createMedidor = async( req, res) => {
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17);`,
         [ time, v3ph, vl1, vl2, vl3, i3ph, il1, 
             il2, il3, pf3ph, pfl1, pfl2, pfl3, ae3ph, re3ph, se3ph, piso]);
-    //console.log(response)
     res.send(response);
 }
 
@@ -295,7 +294,55 @@ const getMedidorDiaSuperficie = async(req, res) => {
     res.status(200).json(response.rows);  
 }
 
+const getMedidorDiaReporte = async(req, res) => {
+    fInicio = req.params.id.split('n')[0];
+    let piso = req.params.id.split('n')[1];
+    const response = await conn.query(`SELECT AVG(v3ph)voltajeTriPro,
+     max(v3ph) voltajeTriMax, min(v3ph) voltajeTriMin,
+	AVG(vl1)voltajel1Pro, max(vl1) voltajel1Max, min(vl1) voltajel1Min,
+	AVG(vl2)voltajel2Pro, max(vl2) voltajel2Max, min(vl2) voltajel2Min,
+	AVG(vl3)voltajel3Pro, max(vl3) voltajel3Max, min(vl3) voltajel3Min,
+
+    AVG(i3ph)intencidadTriPro, max(i3ph) intencidadtrimax, min(i3ph) intencidadtrimin,
+	AVG(il1)intencidadl1pro, max(il1) intencidadl1max, min(il1) intencidadl1min,
+	AVG(il2)intencidadl2pro, max(il2) intencidadl2max, min(il2) intencidadl2min,
+	AVG(il3)intencidadl3pro, max(il3) intencidadl3max, min(il3) intencidadl3min,
+	
+	AVG(ap3ph)potenciaTriPro, max(ap3ph) potenciatrimax, min(ap3ph) potenciatrimin,
+	AVG(apl1)potencial1pro, max(apl1) potencial1max, min(apl1) potencial1min,
+	AVG(apl2)potencial2pro, max(apl2) potencial2max, min(apl2) potencial2min,
+	AVG(apl3)potencial3pro, max(apl3) potencial3max, min(apl3) potencial3min
+
+	FROM public.medi where "time" between $1 and $2 and piso = $3;`,
+    [fInicio, fInicio + " 23:59:59" , piso]);
+    res.status(200).json(response.rows);  
+}
 // graficos en mes
+const getMedidorMesReporte = async(req, res) => {
+    fInicio = req.params.id.split('n')[0];
+    fFinal = req.params.id.split('n')[1];
+    let piso = req.params.id.split('n')[2];
+    const response = await conn.query(`SELECT AVG(v3ph)voltajeTriPro,
+    max(v3ph) voltajeTriMax, min(v3ph) voltajeTriMin,
+   AVG(vl1)voltajel1Pro, max(vl1) voltajel1Max, min(vl1) voltajel1Min,
+   AVG(vl2)voltajel2Pro, max(vl2) voltajel2Max, min(vl2) voltajel2Min,
+   AVG(vl3)voltajel3Pro, max(vl3) voltajel3Max, min(vl3) voltajel3Min,
+
+   AVG(i3ph)intencidadTriPro, max(i3ph) intencidadtrimax, min(i3ph) intencidadtrimin,
+   AVG(il1)intencidadl1pro, max(il1) intencidadl1max, min(il1) intencidadl1min,
+   AVG(il2)intencidadl2pro, max(il2) intencidadl2max, min(il2) intencidadl2min,
+   AVG(il3)intencidadl3pro, max(il3) intencidadl3max, min(il3) intencidadl3min,
+   
+   AVG(ap3ph)potenciaTriPro, max(ap3ph) potenciatrimax, min(ap3ph) potenciatrimin,
+   AVG(apl1)potencial1pro, max(apl1) potencial1max, min(apl1) potencial1min,
+   AVG(apl2)potencial2pro, max(apl2) potencial2max, min(apl2) potencial2min,
+   AVG(apl3)potencial3pro, max(apl3) potencial3max, min(apl3) potencial3min
+
+   FROM public.medi where "time" between $1 and $2 and piso = $3;`,
+    [fInicio, fFinal, piso]);
+    res.status(200).json(response.rows);
+}
+
 const getMedidorMesgrafica = async(req, res) => {
     fInicio = req.params.id.split('n')[0];
     fFinal = req.params.id.split('n')[1];
@@ -352,5 +399,5 @@ function random(min, max) {
 module.exports = {
     getMedidor, createMedidor, createSimulacion, getMedidorDiagrafica, getMedidorDiakw,
     getMedidorDiaOcupacion, getMedidorDiaSuperficie, getMedidorMesgrafica, getMedidorAniografica,
-    getMedidorAnioDatos,getMedidorAnioOcupacion
+    getMedidorAnioDatos,getMedidorAnioOcupacion, getMedidorDiaReporte, getMedidorMesReporte
 }
