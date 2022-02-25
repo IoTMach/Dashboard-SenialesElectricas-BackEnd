@@ -112,7 +112,6 @@ async function simu (){
             fe = f.toISOString().split('.')[0];
             fe = fe.replace("T"," ")  
             console.log(fe)
-
             n = random(0,17)
             try{    
                 
@@ -222,9 +221,9 @@ async function simu (){
                     (medidor2.rows[0].vl1 + medidor3.rows[0].vl1)/2 , (medidor2.rows[0].vl2 + medidor3.rows[0].vl2)/2, 
                     (medidor2.rows[0].vl3 + medidor3.rows[0].vl3)/2, (medidor2.rows[0].i3ph + medidor3.rows[0].i3ph)/2,
                     (medidor2.rows[0].il1 + medidor3.rows[0].il1)/2, (medidor2.rows[0].il2 + medidor3.rows[0].il2)/2,
-                    (medidor2.rows[0].il3 + medidor3.rows[0].il3)/2, (medidor2.rows[0].pf3ph + medidor3.rows[0].pf3ph)/2,
-                    (medidor2.rows[0].pfl1 + medidor3.rows[0].pfl1)/2, (medidor2.rows[0].pfl2 + medidor3.rows[0].pfl2)/2,
-                    (medidor2.rows[0].pfl3 + medidor3.rows[0].pfl3)/2, (medidor2.rows[0].ap3ph + medidor3.rows[0].ap3ph)/2,
+                    (medidor2.rows[0].il3 + medidor3.rows[0].il3)/2, (Math.abs(medidor2.rows[0].pf3ph) + Math.abs(medidor3.rows[0].pf3ph))/2,
+                    (Math.abs(medidor2.rows[0].pfl1) + Math.abs(medidor3.rows[0].pfl1))/2, (Math.abs(medidor2.rows[0].pfl2) + Math.abs(medidor3.rows[0].pfl2))/2,
+                    (Math.abs(medidor2.rows[0].pfl3) + Math.abs(medidor3.rows[0].pfl3))/2, (medidor2.rows[0].ap3ph + medidor3.rows[0].ap3ph)/2,
                     (medidor2.rows[0].apl1 + medidor3.rows[0].apl1)/2, (medidor2.rows[0].apl2 + medidor3.rows[0].apl2)/2,
                     (medidor2.rows[0].apl3 + medidor3.rows[0].apl3)/2, (medidor2.rows[0].rp3ph + medidor3.rows[0].rp3ph)/2,
                     (medidor2.rows[0].rpl1 + medidor3.rows[0].rpl1)/2, (medidor2.rows[0].rpl2 + medidor3.rows[0].rpl2)/2,
@@ -347,7 +346,7 @@ const getMedidorMesgrafica = async(req, res) => {
     fInicio = req.params.id.split('n')[0];
     fFinal = req.params.id.split('n')[1];
     let piso = req.params.id.split('n')[2];
-    const response = await conn.query(`select to_char("time",'YYYY/MM/DD'), v3ph, i3ph, pf3ph
+    const response = await conn.query(`select to_char("time",'YYYY/MM/DD'), v3ph, i3ph, ap3ph
     from public.medi where "time" between $1 and $2 and piso = $3;`,
     [fInicio, fFinal, piso]);
     res.status(200).json(response.rows);
@@ -358,7 +357,7 @@ const getMedidorAniografica = async(req, res) => {
     fInicio = req.params.id.split('n')[0];
     fFinal = req.params.id.split('n')[1];
     let piso = req.params.id.split('n')[2];
-    const response = await conn.query(`select to_char("time",'YYYY/MM'), v3ph, i3ph, pf3ph
+    const response = await conn.query(`select to_char("time",'YYYY/MM'), v3ph, i3ph, ap3ph
     from public.medi where "time" between $1 and $2 and piso = $3;`,
     [fInicio, fFinal, piso]);
     res.status(200).json(response.rows);
